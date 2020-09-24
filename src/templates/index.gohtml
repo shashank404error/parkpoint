@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<title>ParkPoint</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+.w3-bar-block .w3-bar-item {padding:20px}
+button{
+  cursor:pointer;
+}
+</style>
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+</head>
+<body onload="getLocation()">
+
+<!-- Sidebar (hidden by default) -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:4;width:40%;min-width:300px" id="mySidebar">
+  <a href="javascript:void(0)" onclick="w3_close()"
+  class="w3-bar-item w3-button">Close Menu</a>
+  <a href="#food" onclick="w3_close()" class="w3-bar-item w3-button">Login</a>
+  <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">About</a>
+</nav>
+
+<!-- Top menu -->
+<div class="w3-top" style="z-index:3;">
+  <div class="w3-white w3-xlarge w3-card" style="max-width:1500px;">
+    <div class="w3-button w3-padding-16 w3-left" onclick="w3_open()">☰</div>
+    <div class="w3-right w3-padding-16"><img src="/static/images/userNotLogged.png" alt="Hi, User" style="width:40px;height:40px;"></div>
+    <div class="w3-center w3-padding-16">ParkPoint</div>
+  </div>
+</div>
+  
+<!-- !PAGE CONTENT! -->
+<div id='map' class="w3-border-0" style='width: 100%; height: 100%;z-index: 1;position: absolute;opacity: 0.5;'></div>
+<div class="w3-main w3-content" style="max-width:1500px;margin-top:100px;z-index: 2;position: absolute;">
+  <!-- First Photo Grid-->
+  <div class="w3-row-padding w3-center" id="food">
+
+    <div class="w3-quarter w3-margin w3-transparent">
+      <form method="POST" action="/bhopal">
+        <input type="text" name="latitude" id="lat1" style="display: none;">
+        <input type="text" name="longitude" id="longi1" style="display: none;">
+        <button class="w3-border-0 w3-transparent" type="submit" style="outline:none;"><img class="w3-card-4 w3-border" src="/static/images/bhopal.jpg" alt="Bhopal" style="width:100px;height:100px;border-radius: 50%;"></button>
+        <h5><b>Bhopal</b></h5>
+      </form>
+  </div>
+  
+  <div class="w3-quarter w3-margin w3-transparent">
+      <form method="POST" action="/bangalore">
+        <input type="text" name="latitude" id="lat2" style="display: none;">
+        <input type="text" name="longitude" id="longi2" style="display: none;">
+        <button class="w3-border-0 w3-transparent" type="submit" style="outline:none;"><img class="w3-card-4 w3-border" src="/static/images/bangalore.jpg" alt="Bangalore" style="width:100px;height:100px;border-radius: 50%;"></button>
+        <h5><b>Bangalore</b></h5>
+      </form>
+    </div>
+
+    <div class="w3-quarter w3-margin w3-transparent">
+      <form method="POST" action="/mumbai">
+        <input type="text" name="latitude" id="lat3" style="display: none;">
+        <input type="text" name="longitude" id="longi3" style="display: none;">
+        <button class="w3-border-0 w3-transparent" type="submit" style="outline:none;"><img class="w3-card-4 w3-border" src="/static/images/mumbai.jpg" alt="Mumbai" style="width:100px;height:100px;border-radius: 50%;"></button>
+      <h5><b>Mumbai</b></h5>
+    </form>
+    </div>
+
+    <div class="w3-quarter w3-margin w3-transparent">
+      <form method="POST" action="/indore">
+        <input type="text" name="latitude" id="lat4" style="display: none;">
+        <input type="text" name="longitude" id="longi4" style="display: none;">     
+        <button class="w3-border-0 w3-transparent" type="submit" style="outline:none;"><img class="w3-card-4 w3-border" src="/static/images/indore.jpg" alt="Indore" style="width:100px;height:100px;border-radius: 50%;"></button>
+        <h5><b>Indore</b></h5>
+      </form>
+    </div>
+  </div>
+  <p id="error"></p> 
+  
+  
+  <hr id="about">
+<!-- End page content -->
+
+</div>
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+ 
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+
+//////////////////////fetch geolocation////////////////////////////////
+var x=document.getElementById("error");
+var lat1 = document.getElementById("lat1");
+var longi1 = document.getElementById("longi1");
+var lat2 = document.getElementById("lat2");
+var longi2 = document.getElementById("longi2");
+var lat3 = document.getElementById("lat3");
+var longi3 = document.getElementById("longi3");
+var lat4 = document.getElementById("lat4");
+var longi4 = document.getElementById("longi4");
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Can't fetch location.";
+  }
+
+}
+
+function showPosition(position) {
+
+  lat1.value = position.coords.latitude;
+  longi1.value = position.coords.longitude;
+
+  lat2.value = position.coords.latitude;
+  longi2.value = position.coords.longitude;
+
+  lat3.value = position.coords.latitude;
+  longi3.value = position.coords.longitude;
+
+  lat4.value = position.coords.latitude;
+  longi4.value = position.coords.longitude;
+
+  mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhc2hhbmstcHJha2FzaCIsImEiOiJja2ZjZzJmOGsxN3kxMnRvNXp1MDJxcGFzIn0.69B3TiOom1WXyot_FdTVHA';
+  var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v11',
+  center: [position.coords.longitude, position.coords.latitude],
+  zoom: 11.5
+  });
+  
+  var marker = new mapboxgl.Marker()
+  .setLngLat([position.coords.longitude, position.coords.latitude])
+  .addTo(map);
+}
+
+</script>
+
+</body>
+</html>
